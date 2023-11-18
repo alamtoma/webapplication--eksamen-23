@@ -21,12 +21,13 @@ export default function NavigationBar() {
     }
 
     return (
-        <nav className="flex gap-4">
+        <nav>
             {navigation.map((item) => (
                 <Link
                     key={item.href}
                     href={item.href}
-                    className={checkActivePath(item.href) ? "underline" : ""}
+                    /* src: https://chat.openai.com */
+                    className={`navigation-button ${checkActivePath(item.href) ? 'underline' : ''}`}
                 >
                     {item.label}
                 </Link>
