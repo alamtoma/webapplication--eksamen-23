@@ -3,7 +3,7 @@
 import NavigationBar from "@/components/NavigationBar";
 import PageButton from "@/components/PageButton";
 
-export default function AddTemplate() {
+export default function Templates() {
 
     const handleAddTemplateButton = () => {
         console.log("Logic for adding a template.")
