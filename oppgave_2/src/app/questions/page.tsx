@@ -1,10 +1,11 @@
 import NavigationBar from "@/components/NavigationBar";
 
-export default function NyMal() {
+export default function Questions() {
+
     return (
         <>
         <NavigationBar />
-        <p>Gods of death</p>
+        <p>Love apples.</p>
         </>
     )
 }

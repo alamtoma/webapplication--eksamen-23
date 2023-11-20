@@ -1,11 +1,10 @@
 import NavigationBar from "@/components/NavigationBar";
 
-export default function Sporsmal() {
-
+export default function AddTemplate() {
     return (
         <>
         <NavigationBar />
-        <p>Love apples.</p>
+        <p>Gods of death</p>
         </>
     )
 }

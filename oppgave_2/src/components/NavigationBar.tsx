@@ -4,13 +4,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Check this later -> wont work with øæå
-// const urlFriendlyQuestion = encodeURIComponent("Spørsmål");
 const navigation = [
-    {label: "Utøvere", href: "/"},
-    {label: "Ny Utøver", href: "/ny-utover"},
-    {label: "Ny Mal", href: "/ny-mal"},
-    {label: "Spørsmål", href: "/sporsmal"},
+    {label: "Athletes", href: "/"},
+    {label: "Add athlete", href: "/add-athlete"},
+    {label: "Add template", href: "/add-template"},
+    {label: "Questions", href: "/questions"},
 ]
 
 export default function NavigationBar() {

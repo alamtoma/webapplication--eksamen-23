@@ -1,6 +1,6 @@
 import NavigationBar from "@/components/NavigationBar"
 
-export default function NyUtover() {
+export default function AddAthlete() {
     return (
         <>
         <NavigationBar />

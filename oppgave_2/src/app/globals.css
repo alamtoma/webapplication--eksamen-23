@@ -4,6 +4,7 @@
 
 /* CSS HERE */
 
+/* Navigation menu&buttons */
 nav {
   display: flex;
   flex-wrap: wrap;
@@ -30,7 +31,7 @@ nav {
   text-decoration: underline;
 }
 
-/* STOP */
+/* CSS HERE STOP */
 
 @layer base {
   :root {
