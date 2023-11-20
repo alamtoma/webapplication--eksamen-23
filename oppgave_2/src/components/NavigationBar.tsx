@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 const navigation = [
     {label: "Athletes", href: "/"},
     {label: "Add athlete", href: "/add-athlete"},
-    {label: "Add template", href: "/add-template"},
+    {label: "Templates", href: "/templates"},
     {label: "Questions", href: "/questions"},
 ]
 
