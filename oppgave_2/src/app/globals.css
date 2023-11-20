@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS HERE */
+/* CSS HERE */ /* CSS HERE */ /* CSS HERE */
 
-/* Navigation menu&buttons */
+/* Navigation menu*/
 nav {
   display: flex;
   flex-wrap: wrap;
@@ -20,7 +20,6 @@ nav {
   border-radius: 10px;
   padding: 40px 60px 40px 60px;
   margin: 40px 16px 40px 16px;
-  
 }
 
 .navigation-button:hover {
@@ -31,7 +30,30 @@ nav {
   text-decoration: underline;
 }
 
-/* CSS HERE STOP */
+/* Look at shared classes later to reduce duplication */
+/* Add/(remove) buttons for Templates & Questions */
+.center-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-button {
+  display: inline-block;
+  background-color: #555555;
+  color: white;
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 10px 60px 10px 60px;
+  margin: 20px 16px 40px 16px;
+}
+
+.page-button:hover {
+  background-color: black;
+}
+
+/* CSS HERE STOP */ /* CSS HERE STOP */ /* CSS HERE STOP */
 
 @layer base {
   :root {
