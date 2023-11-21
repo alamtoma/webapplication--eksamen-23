@@ -53,6 +53,11 @@ nav {
   background-color: black;
 }
 
+/* Heading, to give air */
+.heading {
+  padding: 0px 0px 0px 20px;
+}
+
 /* CSS HERE STOP */ /* CSS HERE STOP */ /* CSS HERE STOP */
 
 @layer base {
