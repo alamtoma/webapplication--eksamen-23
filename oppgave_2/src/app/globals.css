@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 /* CSS HERE */ /* CSS HERE */ /* CSS HERE */
+/* Look at shared classes later to reduce duplicated css */
 
-/* Navigation menu*/
+/* Navigation menu START*/
 nav {
   display: flex;
   flex-wrap: wrap;
@@ -29,9 +30,10 @@ nav {
 .underline {
   text-decoration: underline;
 }
+/* THE END*/
 
-/* Look at shared classes later to reduce duplication */
-/* Add/(remove) buttons for Templates & Questions */
+
+/* Add/(remove) buttons for Templates & Questions START*/
 .center-container {
   display: flex;
   flex-wrap: wrap;
@@ -52,10 +54,17 @@ nav {
 .page-button:hover {
   background-color: black;
 }
+/* THE END*/
 
-/* Heading, to give air */
+
+/* Heading, to give air to elements */
 .heading {
   padding: 0px 0px 0px 20px;
+}
+
+/* TABLE CSS src: https://www.w3schools.com/css/tryit.asp?filename=trycss_table_fancy*/
+table, th, td {
+  border: 1px solid;
 }
 
 /* CSS HERE STOP */ /* CSS HERE STOP */ /* CSS HERE STOP */
