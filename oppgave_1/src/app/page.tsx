@@ -3,11 +3,12 @@ import Answer from "@/components/Answer";
 import Header from "@/components/Header";
 import Progress from "@/components/Progress";
 import Tasks from "@/components/Tasks";
-import TaskText from "@/components/Text";
 import { useState, useEffect } from "react";
 import { type Task } from "@/types";
 
+
 export default function Home() {
+
  const [tasks, setTasks] = useState<Task[]>([]);
  const [state, setState] = useState(0);
 
@@ -36,13 +37,11 @@ export default function Home() {
  const currentTask = tasks[state];
  
  return (
-   <main>
-     <Header />
-     <Tasks tasks={tasks} state={state}>
-     <Answer currentTask={currentTask} next={next} />
-     </Tasks>
-     <TaskText text={"Hva blir resultatet av regneoperasjonen?"} />
-     <Progress tasks={tasks} state={state} setState={setState} />
-   </main>
- );
-}
+  <main>
+    <Header taskNumber={state + 1} />
+    <Tasks tasks={tasks} state={state}>
+    <Answer currentTask={currentTask} next={next} tasks={tasks} state={state} />
+    </Tasks>
+    <Progress tasks={tasks} state={state} setState={setState} />
+  </main>
+);}

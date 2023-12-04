@@ -29,7 +29,8 @@
     ],
     "types": [
       "node",
-      "vitest/globals"
+      "vitest/globals",
+      "Jest"
     ],
     "paths": {
       "@/*": [
@@ -59,7 +60,9 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.js",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "node_modules/lucide-react/**/*.ts",
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",

@@ -2,31 +2,57 @@ import { Task } from "@/types";
 import { FormEvent, useState } from "react";
 import React, { MouseEvent } from 'react';
 
-export default function Answer({ currentTask, next }: { currentTask: Task, next: () => void }) {
-  const [answer, setAnswer] = useState(0);
-  const [isCorrect, setIsCorrect] = useState(false);
-  const [sendButtonVisible, setSendButtonVisible] = useState(true);
+export default function Answer({ currentTask, next, tasks, state }: { currentTask: Task, next: () => void, tasks: Task[], state: number }) {
+  const [answer, setAnswer] = useState<number | null>(null);
+  const [isCorrect, setIsCorrect] = useState(false); 
+  const [answers, setAnswers] = useState(new Map<Task["id"], { attempts: number; answer: number, isCorrect: boolean }>());
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [showAnswerButton, setShowAnswerButton] = useState(false);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [wrongAnswersByType, setWrongAnswersByType] = useState<{ [key: string]: number }>({});
+  const [allTasksAttempted, setAllTasksAttempted] = useState(false);
 
   const send = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const correctAnswer = checkAnswer(currentTask);
-    console.log('currentTask', currentTask);
-    console.log('userAnswer', answer);
-    console.log('correctAnswer', correctAnswer);
-    const isAnswerCorrect = correctAnswer === answer;
-    console.log('isAnswerCorrect', isAnswerCorrect);
-    setIsCorrect(isAnswerCorrect);
+    if (answer !== null) {
+      const answerDetails = answers.get(currentTask.id) || { attempts: 0, answer: null, isCorrect: false };
+      const attempts = answerDetails.attempts + 1;
+      let isAnswerCorrect = false;
 
-    // Hide the "Send" button when the correct answer is sent
-    setSendButtonVisible(!isAnswerCorrect);
+      if (attempts <= 3) {
+        const correctAnswer = checkAnswer(currentTask);
+        isAnswerCorrect = correctAnswer === answer;
+        setAnswers(new Map(answers.set(currentTask.id, { attempts, answer, isCorrect: isAnswerCorrect })));
+        setIsCorrect(isAnswerCorrect); // Set isCorrect state here
+        if (isAnswerCorrect) {
+          setTotalPoints(prevPoints => prevPoints + 1);
+        } else {
+          setWrongAnswersByType(prev => {
+            const currentCount = prev[currentTask.type] || 0;
+            const newWrongAnswersByType = { ...prev, [currentTask.type]: currentCount + 1 };
+            console.log('Updated wrong answers by type:', newWrongAnswersByType);
+            return newWrongAnswersByType;
+          });
+        }
+      }
+
+      if (attempts === 3 || isAnswerCorrect) {
+        setShowAnswerButton(!isAnswerCorrect); 
+        if (state === tasks.length - 1) {
+          setAllTasksAttempted(true);
+        }
+      }
+    }
+  }
+
+  const showCorrectAnswer = () => {
+    setShowAnswer(true);
+    setShowAnswerButton(false);
   }
 
   const showNextTask = () => {
     next();
-    // Hide the "Good job!" message and the "Show next task" button
-    setIsCorrect(false);
-    // Show the "Send" button when moving to the next task
-    setSendButtonVisible(true);
+    setShowAnswer(false);
   }
 
   const update = (event: FormEvent<HTMLInputElement>) => {
@@ -39,7 +65,21 @@ export default function Answer({ currentTask, next }: { currentTask: Task, next:
     }
   }
 
-  // Function to check the answer based on the task type
+  const operationToPractice = () => {
+    console.log('Calculating operation to practice from:', wrongAnswersByType);
+    let maxCount = 0;
+    let operation = '';
+    for (const [type, count] of Object.entries(wrongAnswersByType)) {
+      if (count > maxCount) {
+        maxCount = count;
+        operation = type;
+      }
+    }
+    console.log('Operation to practice:', operation);
+    return operation;
+  };
+
+//https://chat.openai.com/
   const checkAnswer = (task: Task): number => {
     const [num1, num2] = task.data.split("|").map(Number);
     switch (task.type) {
@@ -65,9 +105,30 @@ export default function Answer({ currentTask, next }: { currentTask: Task, next:
         placeholder="Sett svar her"
         onInput={update}
       />
-      {isCorrect && <div>Bra jobbet!</div>}
-      {sendButtonVisible && <button onClick={send}>Send</button>}
-      {isCorrect && <button onClick={showNextTask}>Show next task</button>}
+      {currentTask && (
+        <p>
+          {answers.get(currentTask.id)?.attempts === 3 
+            ? 'No more attempts' 
+            : `${answers.get(currentTask.id)?.attempts || 0} out of 3 attempts`
+          }
+        </p>
+      )}
+
+      {currentTask && answers.get(currentTask.id)?.isCorrect && <div>Bra jobbet!</div>}
+      {showAnswer && <p>The correct answer is {checkAnswer(currentTask)}</p>}
+      {state === tasks.length - 1 && allTasksAttempted && (
+  <p>
+    Total Points: {totalPoints}
+    <br/>
+    You should practice more: {operationToPractice()}
+    <br/>
+    <button onClick={() => window.location.reload()}>Start again</button>
+  </p>
+  
+)}
+      {!showAnswerButton && !showAnswer && currentTask && !answers.get(currentTask.id)?.isCorrect && <button onClick={send}>Send</button>}
+      {!isCorrect && showAnswerButton && <button onClick={showCorrectAnswer}>Show the answer</button>}
+      {!isCorrect && showAnswer && state < tasks.length - 1 && <button onClick={showNextTask}>Show next task</button>}
     </div>
   )
 }

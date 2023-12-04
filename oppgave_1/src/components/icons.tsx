@@ -1,4 +1,4 @@
-import type { Icon as LucideIcon, LucideProps } from "lucide-react"
+import { LucideIcon, LucideProps } from "lucide-react"
 import {
   Activity,
   AlertCircle,
