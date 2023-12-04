@@ -28,4 +28,6 @@ export type Question = {
 
 export type QuestionFormProps = {
     onClose: () => void;
+    setQuestions: (questions: Question[]) => void
+    questions: Question[]
 }

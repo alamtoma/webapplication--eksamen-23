@@ -26,8 +26,6 @@ export default function Templates() {
             <PageButton onClick={handleAddTemplateButton} label="Add a new Template"/>
             <PageButton onClick={handleRemoveTemplateButton} label="Remove Template"/>
         </div>
-
-        <p>Gods of death</p>
         </>
     )
 }

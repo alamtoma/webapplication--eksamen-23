@@ -31,3 +31,9 @@ model Athlete {
   gender Gender
   sport  Sport
 }
+
+model Question {
+  id Int @id @default(autoincrement())
+  questionText String
+  answerType String
+}
