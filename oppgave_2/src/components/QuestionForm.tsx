@@ -5,7 +5,7 @@ import { useState } from 'react'
 import PageButton from './PageButton'
 
     // src: https://chat.openai.com
-    const QuestionForm = ({onClose, setQuestions, questions}: QuestionFormProps) => {
+    const QuestionForm = ({onClose, setQuestions}: QuestionFormProps) => {
         
     const [questionText, setQuestionText] = useState<string>("")
     const [answerType, setAnswerType] = useState<QuestionType>(QuestionType.TEXT)
