@@ -3,13 +3,31 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
-// TODO: Delete
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  OTHER
+}
+
+enum Sport {
+  RUN
+  BIKE
+  CROSS_COUNTRY_SKI
+  TRIATHLON
+  SWIMMING
+  STRENGTH
+  OTHER
+}
+
+model Athlete {
+  id     Int    @id @default(autoincrement())
+  email  String @unique
+  name   String
+  gender Gender
+  sport  Sport
 }
