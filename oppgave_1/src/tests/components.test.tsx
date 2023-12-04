@@ -15,6 +15,8 @@ import Tasks from "@/components/Tasks"
 import TaskText from "@/components/Text"
 import useProgress from "@/hooks/useProgress"
 import { Task } from "@/types"
+import { NextResponse } from "next/server"
+import { GET, PUT } from "@/app/api/restapi/route"
 
 describe("Button Component", () => {
   it("renders a button with children", () => {
@@ -31,6 +33,74 @@ describe("Button Component", () => {
     expect(button).toHaveClass("class2")
   })
 })
+
+describe("PUT function", () => {
+  it("returns an error response if count is not provided", () => {
+    const mockRequest = {
+      nextUrl: {
+        searchParams: {
+          get: jest.fn(() => null),
+        },
+      },
+    };
+
+    const response = PUT(mockRequest as any);
+
+    expect(response).toEqual(
+      NextResponse.json({ success: false, error: "Invalid count" })
+    );
+  });
+
+  it("returns a success response with tasks if count is provided", () => {
+    const mockRequest = {
+      nextUrl: {
+        searchParams: {
+          get: jest.fn(() => "5"),
+        },
+      },
+    };
+
+    const response = PUT(mockRequest as any);
+
+    expect(response).toEqual(
+      NextResponse.json({ success: true, data: tasks }, { status: 207 })
+    );
+  });
+});
+
+describe("GET function", () => {
+  it("returns an error response if count is not provided", () => {
+    const mockRequest = {
+      nextUrl: {
+        searchParams: {
+          get: jest.fn(() => null),
+        },
+      },
+    };
+
+    const response = GET(mockRequest as any);
+
+    expect(response).toEqual(
+      NextResponse.json({ success: false, error: "Invalid count" })
+    );
+  });
+
+  it("returns a success response with tasks if count is provided", () => {
+    const mockRequest = {
+      nextUrl: {
+        searchParams: {
+          get: jest.fn(() => "5"),
+        },
+      },
+    };
+
+    const response = GET(mockRequest as any);
+
+    expect(response).toEqual(
+      NextResponse.json({ success: true, data: tasks.slice(0, 5) }, { status: 200 })
+    );
+  });
+});
 
 describe("Progress Component", () => {
   const tasks: Task[] = [
@@ -53,41 +123,22 @@ describe("Progress Component", () => {
       type: "multiply",
     },
   ]
-  it("renders with default state and buttons", () => {
-    render(<Progress tasks={tasks} />)
 
-    const currentTask = screen.getByText("123")
-    expect(currentTask).toBeInTheDocument()
+  it("handles next and prev buttons", () => {
+    const mockSetState = jest.fn();
 
-    const nextButton = screen.getByText("Neste")
-    expect(nextButton).toBeInTheDocument()
+    render(<Progress tasks={tasks} state={0} setState={mockSetState} />);
 
-    const prevButton = screen.getByText("Forrige")
-    expect(prevButton).toBeInTheDocument()
-  })
+    const nextButton = screen.getByText(/Neste/i);
+    const prevButton = screen.getByText(/Forrige/i);
 
-  it('increments the state when "Neste" is clicked', () => {
-    render(<Progress tasks={tasks} />)
-    const nextButton = screen.getByText("Neste")
+    fireEvent.click(nextButton);
+    expect(mockSetState).toHaveBeenCalledWith(1);
 
-    fireEvent.click(nextButton)
-
-    const updatedTask = screen.getByText("234")
-    expect(updatedTask).toBeInTheDocument()
-  })
-
-  it('decrements the state when "Forrige" is clicked', () => {
-    render(<Progress tasks={tasks} />)
-    const nextButton = screen.getByText("Neste")
-    const prevButton = screen.getByText("Forrige")
-
-    fireEvent.click(nextButton)
-    fireEvent.click(prevButton)
-
-    const updatedTask = screen.getByText("123")
-    expect(updatedTask).toBeInTheDocument()
-  })
-
+    fireEvent.click(prevButton);
+    expect(mockSetState).toHaveBeenCalledWith(0);
+  });
+});
   it("renders the provided text", () => {
     const text = "This is a test task text."
     render(<TaskText text={text} />)
@@ -104,12 +155,11 @@ describe("Progress Component", () => {
     expect(taskTextElement).toHaveClass("text-sm text-slate-400")
   })
 
-  it("renders the header text correctly", () => {
-    render(<Header />)
-    const headerElement = screen.getByText("Oppgave 1")
-
-    expect(headerElement).toBeInTheDocument()
-  })
+it("renders the header text correctly", () => {
+  render(<Header taskNumber={1} />);
+  const headerElement = screen.getByText(/Oppgave 1/i);
+  expect(headerElement).toBeInTheDocument();
+});
 
   it("updates the answer correctly", () => {
     render(<Answer />)
@@ -161,7 +211,14 @@ describe("Progress Component", () => {
     expect(result.current.count).toBe(1)
     expect(result.current.current).toEqual(tasks[1])
   })
-
+  const tasks = [
+    {
+      id: "124",
+      text: "Skriv resultatet av regneoperasjonen",
+      type: "add",
+      data: "9|4",
+    },
+  ];
   it("updates count when prev is called", () => {
     const { result } = renderHook(() => useProgress({ tasks }))
 
@@ -172,4 +229,50 @@ describe("Progress Component", () => {
     expect(result.current.count).toBe(tasks.length - 1)
     expect(result.current.current).toEqual(tasks[tasks.length - 1])
   })
-})
+  describe("Answer Component", () => {
+    it("handles user input", () => {
+      const mockNext = jest.fn();
+      const mockCurrentTask = { id: '123', text: 'Test task', type: 'add', data: '5|3' };
+  
+      render(<Answer currentTask={mockCurrentTask} next={mockNext} tasks={[mockCurrentTask]} state={0} />);
+  
+      const inputElement = screen.getByPlaceholderText(/Sett svar her/i);
+      fireEvent.input(inputElement, { target: { value: '8' } });
+  
+      expect(inputElement.value).toBe('8');
+    });
+    
+    it("calculates the correct answer", () => {
+      const mockNext = jest.fn();
+      const mockCurrentTask = { id: '123', text: 'Test task', type: 'add', data: '5|3' };
+  
+      render(<Answer currentTask={mockCurrentTask} next={mockNext} tasks={[mockCurrentTask]} state={0} />);
+  
+      const inputElement = screen.getByPlaceholderText(/Sett svar her/i);
+      const sendButton = screen.getByText(/Send/i);
+  
+      fireEvent.input(inputElement, { target: { value: '8' } });
+      fireEvent.click(sendButton);
+  
+      const successMessage = screen.getByText(/Bra jobbet!/i);
+      expect(successMessage).toBeInTheDocument();
+    });
+
+    it("shows correct answer on Show the answer button click", () => {
+      const wrapper = shallow(<Answer currentTask={mockCurrentTask} next={mockNext} tasks={[mockCurrentTask]} state={0} />);
+      wrapper.setState({ showAnswerButton: true });
+      const showAnswerButton = wrapper.find('button');
+      showAnswerButton.simulate('click');
+      expect(wrapper.state().showAnswer).toEqual(true);
+    });
+    
+   it("shows next task on Show next task button click", () => {
+      const wrapper = shallow(<Answer currentTask={mockCurrentTask} next={mockNext} tasks={[mockCurrentTask]} state={0} />);
+      wrapper.setState({ showAnswer: true });
+     const showNextTaskButton = wrapper.find('button');
+    showNextTaskButton.simulate('click');
+    expect(mockNext).toHaveBeenCalled();
+  });
+
+  });
+

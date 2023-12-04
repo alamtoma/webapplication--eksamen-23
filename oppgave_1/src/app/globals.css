@@ -88,8 +88,14 @@
   * {
     @apply border-border;
   }
+  :root {
+    --background: 197.1 100% 85.5%; /* HSL values for sky color */
+    
+    /* rest of the variables */
+  }
   body {
     @apply bg-background text-foreground;
+    @apply text-2xl;
   }
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
