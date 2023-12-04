@@ -4,7 +4,6 @@ export default function AddAthlete() {
     return (
         <>
         <NavigationBar />
-        <p>Do you know?</p>
         </>
     )
 }
