@@ -26,8 +26,6 @@ export default function Questions() {
     }
 
     return (
-
-        // Will fix button/text position
         <>
         <NavigationBar />
 
